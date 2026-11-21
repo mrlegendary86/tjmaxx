@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payments-config
+  namespace: payments
+data:
+  BASE_URL: "https://pay.example.com"   # CHANGE: your public URL (must match ingress host)
+  BUSINESS_NAME: "My Business"          # CHANGE: shown on the page and in Stripe Checkout
+  CURRENCY: "usd"
+  MIN_AMOUNT: "1.00"
+  MAX_AMOUNT: "10000.00"

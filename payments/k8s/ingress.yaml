@@ -1,0 +1,28 @@
+# Assumes ingress-nginx and cert-manager (with a ClusterIssuer named letsencrypt-prod)
+# are installed in the cluster. HTTPS is required for a payment site.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: payments
+  namespace: payments
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/limit-rps: "5"     # basic per-IP rate limit
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [pay.example.com]          # CHANGE
+      secretName: payments-tls
+  rules:
+    - host: pay.example.com             # CHANGE
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: payments
+                port: { number: 80 }

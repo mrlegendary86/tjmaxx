@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Make a payment</h1>
+  <p class="sub">to {{ business }}</p>
+  {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+  <form method="post" action="/checkout">
+    <label for="amount">Amount ({{ currency }})</label>
+    <div class="amount">
+      <input id="amount" name="amount" type="number" inputmode="decimal" step="0.01"
+             min="{{ min_amount }}" max="{{ max_amount }}" required value="{{ amount or '' }}" placeholder="25.00">
+    </div>
+    <label for="note">What is this payment for? <span style="font-weight:400;opacity:.6">(optional)</span></label>
+    <input id="note" name="note" type="text" maxlength="{{ max_note }}" value="{{ note or '' }}" placeholder="Invoice #1234">
+    <button type="submit">Continue to secure payment</button>
+  </form>
+  <p class="fine">Payments are processed securely by Stripe. Card details never touch our servers.</p>
+{% endblock %}
